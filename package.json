@@ -1,0 +1,14 @@
+{
+  "name": "react-evenbus-x",
+  "version": "1.0.0",
+  "description": "Event bus implementation for React components",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "m4nitesh",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^16.10.2"
+  }
+}
