@@ -2,7 +2,7 @@ import * as React from 'react';
 import EventBus from './index'
 
 
-const withEventBus = (args) => {
+const withEventBus = () => {
     return (Component) => {
         return class WithEventBus extends React.Component {
             eventBus = null;
