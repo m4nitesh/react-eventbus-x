@@ -4,19 +4,28 @@ import EventBus from './index'
 
 const withEventBus = (args) => {
     return (Component) => {
-        class WithEventBus extends React.Component {
-            reference = null;
-            constructor() {
-                if( this.reference == null){
-                    this.reference = new EventBus()
+        return class WithEventBus extends React.Component {
+            eventBus = null;
+            constructor(props) {
+                super(props)
+                if (this.eventBus == null) {
+                    this.eventBus = new EventBus()
                 }
-
             }
+
+            componentDidMount() {
+                this.eventBus.subscribe(Component)
+            }
+
+            componentWillUnmount() {
+                this.eventBus.unsubscribe(Component)
+            }
+
             render() {
-                return <div>
-                    Hello
-                </div>
+                return <Component {...this.props} />
             }
         }
     };
 }
+
+export default withEventBus;

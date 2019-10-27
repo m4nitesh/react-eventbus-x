@@ -19,11 +19,15 @@ class EventBus {
    * args - unique key and object
    * return type void
    */
-  static addSubscriber = (Component) => {
-    if (!Component.prototype.getEvent) {
-      throw new Error('Callback method not added to Component')
+  subscribe = (Component) => {
+    if (!Component.prototype.observeEvent) {
+      throw new Error(`Callback method not added to ${Component.name}`)
     }
-    window.EventBus[Component.name] = Component.prototype.getEvent;
+    if (Component.prototype.observeEvent.length < 2) {
+      throw new Error('Callback method does not have supporting args length')
+    }
+
+    window.EventBus[Component.name] = Component.prototype.observeEvent;
   }
 
   /**
@@ -31,25 +35,33 @@ class EventBus {
    * args - unique key and object
    * return type - boolean
    */
-  static isSubscriberAttached = (Component) => {
-    if (window.EventBus[Component.name] == '') {
-
+  isSubscriberAttached = (Component) => {
+    if (window.EventBus[Component.name]) {
+      return true
     }
+    return false
   }
 
   /**
    * Remove from list of subscribers and if already added otherwise throw error
    */
-  static unsubscribe = (Component) => {
-
+  unsubscribe = (Component) => {
+    delete window.EventBus[Component.name]
   }
 
   /**
    * Checks if events bus attached to window if not throws error(internal error, constructor didn't work)
    * Finds in the list of subscribers and sends
   */
-  static sendEvent(key, val) {
-    Location
+  static sendEvent(ComponentName, key, val) {
+    if (!window.EventBus) {
+      throw new Error('Eventbus is not initialized, use HOC(withEventBus) to initialize')
+    }
+    const _callback = window.EventBus[ComponentName];
+    if (!_callback) {
+      throw new Error(` ${ComponentName} not subscribed `)
+    }
+    _callback(key, val)
   }
 
 }
