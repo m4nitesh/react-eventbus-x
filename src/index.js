@@ -1,10 +1,4 @@
-/**
- * Eventbus class
- */
-
 class EventBus {
-
-
   constructor() {
     /**
      * Initialize and Attach Eventbus to window if not done
@@ -19,7 +13,8 @@ class EventBus {
    * args - unique key and object
    * return type void
    */
-  subscribe = (Component) => {
+
+  static subscribe = (Component) => {
     if (!Component.prototype.observeEvent) {
       throw new Error(`Callback method not added to ${Component.name}`)
     }
@@ -35,7 +30,7 @@ class EventBus {
    * args - unique key and object
    * return type - boolean
    */
-  isSubscriberAttached = (Component) => {
+  static isSubscriberAttached = (Component) => {
     if (window.EventBus[Component.name]) {
       return true
     }
@@ -45,7 +40,7 @@ class EventBus {
   /**
    * Remove from list of subscribers and if already added otherwise throw error
    */
-  unsubscribe = (Component) => {
+  static unsubscribe = (Component) => {
     delete window.EventBus[Component.name]
   }
 
