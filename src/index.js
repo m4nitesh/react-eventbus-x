@@ -1,42 +1,36 @@
 class EventBus {
-  constructor() {
-    /**
-     * Initialize and Attach Eventbus to window if not done
-     */
+
+  /**
+   * Init eventbus by attaching to window
+   */
+  initBus() {
     if (!window.EventBus) {
       window.EventBus = {}
     }
   }
 
   /**
+   * Get singleton instance of EventBus
+   */
+  static getInstance() {
+    initBus()
+    return this
+  }
+
+
+  /**
    * Add to the list of subscribers, if already added reject and throw error
    * args - unique key and object
    * return type void
    */
-
-  static getInstance(WrappedComponent) {
-    if (!WrappedComponent.prototype.isReactComponent) {
-      return this;
+  subscribe = (eventKey, _callback) => {
+    if (!_callback) {
+      throw new Error(`Callback method not added to ${eventKey}`)
     }
-    const ref = this.instanceRef;
-    return ref.getInstance ? ref.getInstance() : ref;
-  }
-
-
-  static subscribe = (name, method) => {
-    if (!window.EventBus) {
-      window.EventBus = {}
+    if (_callback.length < 2) {
+      throw new Error('Callback method does not have supporting args length')
     }
-    // console.log(Component)
-    // if (!Component.prototype.observeEvent) {
-    //   throw new Error(`Callback method not added to ${Component.name}`)
-    // }
-    // if (Component.prototype.observeEvent.length < 2) {
-    //   throw new Error('Callback method does not have supporting args length')
-    // }
-
-    // window.EventBus[Component.name] = Component.prototype.observeEvent;
-    window.EventBus[name] = method
+    window.EventBus[eventKey] = _callback
   }
 
   /**
@@ -44,8 +38,8 @@ class EventBus {
    * args - unique key and object
    * return type - boolean
    */
-  static isSubscriberAttached = (Component) => {
-    if (window.EventBus[Component.name]) {
+  isSubscriberAttached = (eventKey) => {
+    if (window.EventBus[eventKey]) {
       return true
     }
     return false
@@ -54,23 +48,23 @@ class EventBus {
   /**
    * Remove from list of subscribers and if already added otherwise throw error
    */
-  static unsubscribe = (Component) => {
-    delete window.EventBus[Component.name]
+  unsubscribe = (eventKey) => {
+    delete window.EventBus[eventKey]
   }
 
   /**
    * Checks if events bus attached to window if not throws error(internal error, constructor didn't work)
    * Finds in the list of subscribers and sends
   */
-  static sendEvent(ComponentName, key, val) {
+  sendEvent(eventKey, dataKey, val) {
     if (!window.EventBus) {
-      throw new Error('Eventbus is not initialized, use HOC(withEventBus) to initialize')
+      throw new Error('Eventbus is not initialized, use getInstance')
     }
-    const _callback = window.EventBus[ComponentName];
+    const _callback = window.EventBus[eventKey];
     if (!_callback) {
-      throw new Error(` ${ComponentName} not subscribed `)
+      throw new Error(` ${eventKey} not subscribed `)
     }
-    _callback(key, val)
+    _callback(dataKey, val)
   }
 
 }
