@@ -3,7 +3,7 @@ class EventBus {
   /**
    * Init eventbus by attaching to window
    */
-  initBus() {
+  static initBus = () => {
     if (!window.EventBus) {
       window.EventBus = {}
     }
@@ -12,13 +12,13 @@ class EventBus {
   /**
    * Get singleton instance of EventBus
    */
-  eventBus = null;
+  static bus = null;
   static getInstance() {
-    initBus()
-    if (!eventBus) {
-      eventBus = new EventBus()
+    EventBus.initBus()
+    if (!EventBus.bus) {
+      EventBus.bus = new EventBus()
     }
-    return eventBus
+    return EventBus.bus
   }
 
 
