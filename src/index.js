@@ -14,15 +14,29 @@ class EventBus {
    * return type void
    */
 
-  static subscribe = (Component) => {
-    if (!Component.prototype.observeEvent) {
-      throw new Error(`Callback method not added to ${Component.name}`)
+  static getInstance(WrappedComponent) {
+    if (!WrappedComponent.prototype.isReactComponent) {
+      return this;
     }
-    if (Component.prototype.observeEvent.length < 2) {
-      throw new Error('Callback method does not have supporting args length')
-    }
+    const ref = this.instanceRef;
+    return ref.getInstance ? ref.getInstance() : ref;
+  }
 
-    window.EventBus[Component.name] = Component.prototype.observeEvent;
+
+  static subscribe = (name, method) => {
+    if (!window.EventBus) {
+      window.EventBus = {}
+    }
+    // console.log(Component)
+    // if (!Component.prototype.observeEvent) {
+    //   throw new Error(`Callback method not added to ${Component.name}`)
+    // }
+    // if (Component.prototype.observeEvent.length < 2) {
+    //   throw new Error('Callback method does not have supporting args length')
+    // }
+
+    // window.EventBus[Component.name] = Component.prototype.observeEvent;
+    window.EventBus[name] = method
   }
 
   /**
