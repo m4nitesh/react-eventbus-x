@@ -12,9 +12,13 @@ class EventBus {
   /**
    * Get singleton instance of EventBus
    */
+  eventBus = null;
   static getInstance() {
     initBus()
-    return this
+    if (!eventBus) {
+      eventBus = new EventBus()
+    }
+    return eventBus
   }
 
 
